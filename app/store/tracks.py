@@ -134,6 +134,16 @@ class TrackStore:
     # ================================================
     # ================== GETTERS =====================
     # ================================================
+            
+    @classmethod
+    def get_tracks_by_trackname(cls, trackname: str) -> list[Track]:
+        """
+        Returns a list of tracks by their title.
+        """
+
+        tracks = [track for track in cls.tracks if track.title in trackname or trackname in track.title]
+        return tracks
+    
 
     @classmethod
     def get_tracks_by_trackhashes(cls, trackhashes: list[str]) -> list[Track]:
@@ -146,6 +156,22 @@ class TrackStore:
 
         tracks.sort(key=lambda t: trackhashes.index(t.trackhash))
         return tracks
+
+    @classmethod
+    def get_tracks_containing_filepaths(cls, paths: list[str]) -> list[Track]:
+        """
+        Returns all tracks having/matching given paths
+        """
+
+        # Someone plz improve this. Sorry
+        results = []
+        for path in paths:
+            tracks = [track for track in cls.tracks if track.filepath in path or path in track.filepath]
+            for track in tracks:
+                if track not in results:
+                    results.append(track)
+        
+        return results
 
     @classmethod
     def get_tracks_by_filepaths(cls, paths: list[str]) -> list[Track]:
